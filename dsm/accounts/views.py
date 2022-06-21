@@ -8,7 +8,7 @@ from django.contrib.auth import login as authLogin, logout, authenticate
 from django.urls import reverse, reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import customer
+from .models import customer, attendance
 from .models import Teacher
 from django import forms
 # Create your views here.
@@ -23,9 +23,19 @@ def my_form(request):
     if request.method == "POST":
         form = MyForm(request.POST)
         if form.is_valid():
-            form.save()
+            username=form.cleaned_data['name']
+            tempform = AuthBackend.authenticate(request, username=username, password=123)
+            if tempform is None:
+
+            #form.clean_name()
+                form.save()
+                messages.error(request, 'User successfully registered')
+            else:
+                messages.error(request, 'username already registered')
+                #return redirect('register')
     else:
         form = MyForm()
+        #messages.error(request, 'username or password not correct')
     return render(request, 'accounts/register.html', {'form': form})
 
 def home(request):
@@ -54,7 +64,7 @@ def login(request,backend='accounts.backend.AuthBackend'):
         password=request.POST.get('password')
         if 'student' in request.POST:
             #form=authenticate(request,username=username,password=password)
-            form=AuthBackend.authenticate1(request,username=username,password=password)
+            form= AuthBackend.authenticate(request, username=username, password=password)
             #print("form---->",form.email)
             if form is not None:
                 # print('hellllllllllllldsjdbjad\n')
@@ -83,7 +93,7 @@ def login(request,backend='accounts.backend.AuthBackend'):
      #return render(request, 'accounts/login.html')
 
         elif 'instructor' in request.POST:
-            form = Teacher_AuthBackend.authenticate1(request, username=username, password=password)
+            form = Teacher_AuthBackend.authenticate(request, username=username, password=password)
             if form:
                 # print('hellllllllllllldsjdbjad\n')
                 # if form.is_active:
@@ -195,6 +205,22 @@ def TeacherInfo(request):
         return redirect('MainPage')
     return render(request, 'accounts/myTeacherInfo.html', {'userprofile': request.user})
 
+def UserPlan(request):
+    if request.method == 'POST':
+        return redirect('MainPage')
+    return render(request, 'accounts/UserPlan.html', {'userprofile': request.user})
+
+def MarkAttendance(request):
+    if request.method == 'POST':
+        date1=request.POST.get("AttendanceDate")
+        p_status=request.POST.get("Present/Absent")
+
+        attend=attendance(studentName=request.user.studentName,date=date1,status=p_status)
+        attend.save()
+
+
+        return redirect('MarkAttendance')
+    return render(request, 'accounts/MarkAttendance.html', {'userprofile': request.user})
 
 def dashboard(request):
     #return redirect('login')
@@ -202,3 +228,19 @@ def dashboard(request):
     print("g--->",username)
     #print("Inplan---->", request.user.name)
     return render(request, 'accounts/MainPage.html',{})
+
+def Attendance(request):
+    if request.method == 'POST':
+        return redirect('MainPage')
+    attendance_list = attendance.objects.all()
+    tempDate=[]
+    tempStatus=[]
+
+    for x in attendance_list:
+        if x.studentName==request.user:
+            tempDate.append(x.date)
+            tempStatus.append(x.status)
+    finalList=zip(tempDate,tempStatus)
+    finalList=list(finalList)
+    context_dict = {'attendance': finalList}
+    return render(request, 'accounts/attendance.html', context_dict)

@@ -31,7 +31,7 @@ SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = False
 ALLOWED_HOSTS = []
 
-SESSION_ENGINE = "django.contrib.sessions.backends.db"
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 # Application definition
 
 INSTALLED_APPS = [
@@ -108,8 +108,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 AUTHENTICATION_BACKENDS = (
     #'django.contrib.auth.backends.ModelBackend',
-    #'accounts.backend.AuthBackend',
-    #'accounts.backend.Teacher_AuthBackend',
+    'accounts.backend.AuthBackend',
+    'accounts.backend.Teacher_AuthBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 

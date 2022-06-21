@@ -1,13 +1,16 @@
 from .models import customer
 from .models import Teacher
 class AuthBackend(object):
-    def authenticate1(self,username=None, password=None):
+
+
+    def authenticate(self,username=None, password=None):
         print("hdhsgdhg--->",username)
+
         try:
             user = customer.objects.get(name=username)
             if user:
-                #if password==user.password_en:
-                return user
+                if password==user.password_en:
+                    return user
         except customer.DoesNotExist:
             return None
 
@@ -18,14 +21,14 @@ class AuthBackend(object):
             return None
 
 class Teacher_AuthBackend(object):
-    def authenticate1(self,username=None, password=None):
+    def authenticate(self,username=None, password=None):
         print("hdhsgdhg--->",username)
         try:
             user = Teacher.objects.get(name=username)
             if user:
-                #if password==user.password_en:
-                return user
-        except customer.DoesNotExist:
+                if password==user.password_en:
+                    return user
+        except Teacher.DoesNotExist:
             return None
 
     def get_user(self, user_id):

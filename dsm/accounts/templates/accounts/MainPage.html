@@ -15,16 +15,17 @@
 
   </head>
   <body>
-		
+
 		{% include 'accounts/side_navbar.html' %}
 
         <!-- Page Content  -->
       <div id="content" class="p-4 p-md-5 pt-5">
 
-        <h2 class="mb-4">Welcome {{user.name}}</h2>
+        <h2 class="mb-4">Welcome {{user.name }}</h2>
           <hr>
         <!--h3>Select a plan to begin learning </h3-->
-        {% if user.isRegistered is False%}
+        {% if user.status == "student" %}
+        {% if user.isRegistered is False %}
             <a class="btn-outline-sm page-scroll" href="{% url 'planSelection' %}">Select plan to Begin</a>
           <!--form action="{% url 'planSelection' %}" method="get">
             {% csrf_token %}
@@ -32,17 +33,16 @@
             <input type="hidden" name="book_token" value="{{user}}">
             <input type="submit" class="btn-outline-sm page-scroll" value="Select Plan to begin" />
             </form-->
-        {% else %}
-            {% if user.plan == "PLan1" %}
-                {% include 'accounts/basic.html' %}
-            {% endif %}
-            {% if user.plan == "Plan2" %}
-                {% include 'accounts/standard.html' %}
-            {% endif %}
-            {% if user.plan == "Plan3" %}
-                {% include 'accounts/premium.html' %}
-            {% endif %}
+
         {% endif %}
+          {% endif %}
+
+
+
+          {% include 'accounts/UserDetail.html' %}
+
+
+
         <!--a class="btn-outline-sm page-scroll" href="{% url 'planSelection' %}">Select plan to begin</a-->
 
       </div>

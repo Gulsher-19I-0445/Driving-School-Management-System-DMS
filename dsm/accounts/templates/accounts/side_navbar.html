@@ -27,26 +27,37 @@
 	          <li class="active">
 	            <a href="{% url 'MainPage' %}">Home</a>
 	          </li>
+			  {% if user.status == "student" %}
 	          <li>
-	              <a href="#">Your Plan</a>
+	              <a href="{% url 'UserPlan' %}">Your Plan</a>
 	          </li>
+			  {% endif %}
+
+			  {% if user.status == "teacher" %}
 	          <li>
-              <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Daily Progress</a>
-              <ul class="collapse list-unstyled" id="pageSubmenu">
-                <li>
-                    <a href="#">Page 1</a>
-                </li>
-                <li>
-                    <a href="#">Page 2</a>
-                </li>
-                <li>
-                    <a href="#">Page 3</a>
-                </li>
-              </ul>
+	              <a href="#">Mark Daily Progress</a>
 	          </li>
+			  {% endif %}
+
+			  {% if user.status == "student" %}
 	          <li>
-              <a href="#">Attendance</a>
+	              <a href="#">Your Daily Progress</a>
 	          </li>
+			  {% endif %}
+
+
+			{% if user.status == "teacher" %}
+	          <li>
+              <a href="{% url 'MarkAttendance' %}">Attendance</a>
+	          </li>
+			{% endif %}
+
+			{% if user.status == "student" %}
+	          <li>
+              <a href="{% url 'Attendance' %}">Attendance</a>
+	          </li>
+			{% endif %}
+
 	          <li>
               <a href="{% url 'TeacherInfo' %}">Instructor</a>
 	          </li>
@@ -58,3 +69,8 @@
 
 	      </div>
 			</nav>
+
+			<script src="{% static '/js/jquery.min.js' %}"></script>
+    <script src="{% static '/js/popper.js' %}"></script>
+    <script src="{% static '/js/bootstrap.min.js'%}"></script>
+    <script src="{%static '/js/main.js'%}"></script>
